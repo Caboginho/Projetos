@@ -22,7 +22,6 @@ void exemploVariaveisC() {
 
 void exemploVariaveisCPP() {
     // C++
-    #include <iostream>
     int inteiro = 10;
     float flutuante = 5.5;
     char caractere = 'A';
@@ -34,7 +33,6 @@ void exemploVariaveisCPP() {
 
 void exemploEstruturasControleC() {
     // C
-    #include <stdio.h>
     int x = 10;
 
     if (x > 5) {
@@ -50,7 +48,7 @@ void exemploEstruturasControleC() {
 
 void exemploEstruturasControleCPP() {
     // C++
-    #include <iostream>
+
     int x = 10;
 
     if (x > 5) {
@@ -63,7 +61,7 @@ void exemploEstruturasControleCPP() {
         std::cout << "i: " << i << std::endl;
     }
 }
-#include <stdio.h>
+
 void saudacao() {
     printf("Olá, mundo!\n");
 }
@@ -77,26 +75,24 @@ void exemploFuncoesC() {
     int resultado = soma(5, 3);
     printf("Soma: %d\n", resultado);
 }
-#include <iostream>
-void saudacao() {
+
+void saudacaocpp() {
     std::cout << "Olá, mundo!" << std::endl;
 }
-
-int soma(int a, int b) {
+int somacpp(int a, int b) {
     return a + b;
 }
+
 void exemploFuncoesCPP() {
     // C++
-    saudacao();
-    int resultado = soma(5, 3);
+    saudacaocpp();
+    int resultado = somacpp(5, 3);
     std::cout << "Soma: " << resultado << std::endl;
 }
 
 void exemploPOO() {
     // Programação Orientada a Objetos (C++)
-    #include <iostream>
-    #include <string>
-
+   
     class Pessoa {
     public:
         std::string nome;
@@ -115,9 +111,7 @@ void exemploPOO() {
 
 void exemploHerancaInterfacePolimorfismo() {
     // Herança, Interface e Polimorfismo
-    #include <iostream>
-    #include <string>
-
+    
     // Classe base
     class Animal {
     public:
@@ -171,13 +165,13 @@ void exemploHerancaInterfacePolimorfismo() {
             std::cout << "A bicicleta está se movendo." << std::endl;
         }
     };
-
+    int i = 0;
     // Polimorfismo com classes derivadas
     Animal* animais[2];
     animais[0] = new Cachorro("Rex");
     animais[1] = new Gato("Mimi");
 
-    for (int i = 0; i < 2; i++) {
+    for ( i = 0; i < 2; i++) {
         animais[i]->fazerSom();
     }
 
@@ -186,12 +180,12 @@ void exemploHerancaInterfacePolimorfismo() {
     veiculos[0] = new Carro();
     veiculos[1] = new Bicicleta();
 
-    for (int i = 0; i < 2; i++) {
+    for (i = 0; i < 2; i++) {
         veiculos[i]->mover();
     }
 
     // Limpeza de memória
-    for (int i = 0; i < 2; i++) {
+    for (i = 0; i < 2; i++) {
         delete animais[i];
         delete veiculos[i];
     }
@@ -336,61 +330,63 @@ void exibirMenu() {
     std::cout << "12. Árvore Binária" << std::endl;
     std::cout << "13. Filas" << std::endl;
     std::cout << "14. Pilhas" << std::endl;
-    std::cout << "Escreva ESC para sair." << std::endl;
+    std::cout << "Escreva '15' para sair." << std::endl;
 }
 
 int main() {
+    // Configura a localidade para português do Brasil
+    std::setlocale(LC_ALL, "pt_BR");
     while (true) {
         exibirMenu();
-        char escolha = _getch();
+        int escolha = 0;
 
-        if (escolha == 27) { // ESC key
+        scanf("%d", &escolha);
+        if (escolha == 15) { // ESC key
             break;
         }
-
         system("cls"); // Limpa a tela
 
         switch (escolha) {
-            case '1':
+            case 1:
                 exemploVariaveisC();
                 break;
-            case '2':
+            case 2:
                 exemploVariaveisCPP();
                 break;
-            case '3':
+            case 3:
                 exemploEstruturasControleC();
                 break;
-            case '4':
+            case 4:
                 exemploEstruturasControleCPP();
                 break;
-            case '5':
+            case 5:
                 exemploFuncoesC();
                 break;
-            case '6':
+            case 6:
                 exemploFuncoesCPP();
                 break;
-            case '7':
+            case 7:
                 exemploPOO();
                 break;
-            case '8':
+            case 8:
                 exemploHerancaInterfacePolimorfismo();
                 break;
-            case '9':
+            case 9:
                 exemploVetores();
                 break;
-            case '10':
+            case 10:
                 exemploMatrizes();
                 break;
-            case '11':
+            case 11:
                 exemploListasEncadeadas();
                 break;
-            case '12':
+            case 12:
                 exemploArvoreBinaria();
                 break;
-            case '13':
+            case 13:
                 exemploFilas();
                 break;
-            case '14':
+            case 14:
                 exemploPilhas();
                 break;
             default:
@@ -399,7 +395,6 @@ int main() {
         }
 
         std::cout << "Pressione qualquer tecla para voltar ao menu..." << std::endl;
-        _getch();
         system("cls"); // Limpa a tela
     }
 
