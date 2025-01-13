@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Acompanhar Pedidos</title>
+</head>
+<body>
+    <h1>Seus Pedidos</h1>
+    <ul>
+        {% for pedido in pedidos %}
+        <li>
+            <strong>Pedido #{{ pedido.id_pedido }}</strong>: {{ pedido.item }} ({{ pedido.quantidade }} unidade(s))
+            - {{ pedido.data_compra }}
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('cliente.cliente_home') }}">Voltar</a>
+</body>
+</html>

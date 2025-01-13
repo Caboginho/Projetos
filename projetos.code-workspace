@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Projetos",
+			"path": "Projetos"
+		}
+	],
+	"settings": {
+		"materialkv.pythonFile": "main.py"
+	}
+}

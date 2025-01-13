@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %} <title>Buscar Produtos/Serviços</title> Buscar{% endblock %}
+
+{% block content %}
+
+    <h1>Buscar Produtos/Serviços</h1>
+    <form method="POST" action="{{ url_for('cliente.buscar') }}">
+        <input type="text" name="query" placeholder="Digite sua busca">
+        <button type="submit">Buscar</button>
+    </form>
+    <ul>
+        {% for resultado in resultados %}
+        <li>{{ resultado.nome }} - {{ resultado.descricao }} (R$ {{ resultado.preco }})</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('cliente.cliente_home') }}">Voltar</a>
+
+{% endblock %}

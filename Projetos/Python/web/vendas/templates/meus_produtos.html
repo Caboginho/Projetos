@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Meus Produtos{% endblock %}
+
+{% block content %}
+<h2>Meus Produtos</h2>
+<table>
+    <tr>
+        <th>Nome</th>
+        <th>Preço</th>
+        <th>Estoque</th>
+        <th>Tipo</th>
+    </tr>
+    {% for produto in produtos %}
+    <tr>
+        <td>{{ produto[0] }}</td>
+        <td>{{ produto[1] }}</td>
+        <td>{{ produto[2] }}</td>
+        <td>{{ produto[3] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('prestador.adicionar_produto') }}">Adicionar Novo Produto</a>
+
+{% endblock %}

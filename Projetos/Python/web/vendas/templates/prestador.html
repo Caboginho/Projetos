@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Página do Prestador{% endblock %}
+
+{% block content %}
+<h2>Bem-vindo, {{ usuario.nome }}</h2>
+<p>Seu perfil atual é: Prestador</p>
+<p>Escolha uma das opções abaixo:</p>
+<ul>
+    <li><a href="{{ url_for('prestador.adicionar_produto') }}">Adicionar Produto</a></li>
+    <li><a href="{{ url_for('prestador.adicionar_servico') }}">Adicionar Serviço</a></li>
+    <li><a href="{{ url_for('prestador.estoque') }}"> Estoque</a></li>
+    <li><a href="{{ url_for('prestador.agenda') }}"> Agenda</a></li>
+    <li><a href="{{ url_for('prestador.meus_produtos') }}">Lista Meus Produtos</a></li>
+    <li><a href="{{ url_for('prestador.meus_servicos') }}">Lista Meus Serviços</a></li>
+    <li><a href="{{ url_for('prestador.logout') }}">Logout</a></li>
+</ul>
+{% endblock %}

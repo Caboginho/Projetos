@@ -1,0 +1,32 @@
+<RegisterScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 10
+        
+        Label:
+            text: "Registrar"
+            halign: "center"
+            theme_text_color: "Primary"
+        TextInput:
+            id: name
+            hint_text: "Nome"
+            mode: "filled"
+        TextInput:
+            id: email
+            hint_text: "E-mail"
+            mode: "filled"
+        TextInput:
+            id: password
+            hint_text: "Senha"
+            mode: "filled"
+            password: True
+        Button:
+            text: "Registrar"
+            pos_hint: {"center_x": 0.5}
+            on_release:
+                app.register_user(name.text, email.text, password.text)
+        Button:
+            text: "Voltar ao Login"
+            pos_hint: {"center_x": 0.5}
+            on_release: app.change_screen("login")

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %} Agenda{% endblock %}
+
+{% block content %}
+<h2> Agenda</h2>
+<p>Funcionalidade em desenvolvimento.</p>
+<h2>Agenda</h2>
+<table>
+    <tr>
+        <th>Serviço</th>
+        <th>Data e Hora Início</th>
+        <th>Data e Hora Fim</th>
+        <th>Status</th>
+        <th>Ação</th>
+    </tr>
+    {% for item in agenda %}
+    <tr>
+        <td>{{ item['id_servico'] }}</td>
+        <td>{{ item['data_hora_inicio'] }}</td>
+        <td>{{ item['data_hora_fim'] }}</td>
+        <td>{{ item['status'] }}</td>
+        <td>
+            <form action="{{ url_for('prestador.agenda') }}" method="POST">
+                <input type="hidden" name="id_servico" value="{{ item['id_servico'] }}">
+                <input type="hidden" name="data_hora_inicio" value="{{ item['data_hora_inicio'] }}">
+                <input type="hidden" name="data_hora_fim" value="{{ item['data_hora_fim'] }}">
+                <button type="submit">Reservar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="{{ url_for('prestador.prestador_home') }}">Voltar</a>
+{% endblock %}

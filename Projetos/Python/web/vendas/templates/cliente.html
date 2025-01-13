@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Página do Cliente{% endblock %}
+
+{% block content %}
+<h2>Bem-vindo, {{ usuario.nome }}</h2>
+<p>Seu perfil atual é: Cliente</p>
+<p>Escolha uma das opções abaixo:</p>
+<ul>
+<li><a href="{{ url_for('cliente.acompanhar') }}">Acompanhar Pedidos</a></li>
+<li><a href="{{ url_for('cliente.buscar') }}">Buscar Produtos/Serviços</a></li>
+<li><a href="{{ url_for('cliente.logout') }}">Logout</a></li>
+
+</ul>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Meus Servicos{% endblock %}
+
+{% block content %}
+<h2>Meus Servicos</h2>
+<table>
+    <tr>
+        <th>Nome</th>
+        <th>Preço</th>
+        <th>Estoque</th>
+    </tr>
+    {% for servico in servicos %}
+    <tr>
+        <td>{{ servico[0] }}</td>
+        <td>{{ servico[1] }}</td>
+        <td>{{ servico[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('prestador.adicionar_servico') }}">Adicionar Novo Servicos</a>
+
+{% endblock %}

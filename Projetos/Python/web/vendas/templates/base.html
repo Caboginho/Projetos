@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Meu Site{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('auth.home') }}">Home</a></li>
+                {% if session.get('usuario') %}
+                    <!-- Exibe se o usuário está logado -->
+                      <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+                     <li><a href="{{ url_for('auth.mudar_perfil') }}">Mudar Perfil</a></li>
+                {% else %}
+                <!-- Exibe se o usuário não está logado -->
+                    <li><a href="{{ url_for('auth.login') }}">Entrar</a></l>
+                    <li><a href="{{ url_for('auth.register') }}">Cadastrar</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="content">
+        {% block content %} 
+        <!-- O conteúdo específico de cada página será inserido aqui -->
+        {% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Meu Site. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
