@@ -1,0 +1,241 @@
+📘 Documento de Especificação do Projeto “Gerenciador de Downloads com Monetização”
+1. Visão Geral
+Construção de uma aplicação desktop em Python com interface GUI em Tkinter (inspirada no IDM), capaz de varrer web pages, listar e gerenciar downloads HTTP/HTTPS e torrents (incluindo semeadura), autenticação social, uso por créditos via anúncios e/ou assinatura paga.
+
+2. Requisitos
+2.1 Funcionais
+Varredura de URL: extração de links de mídia (.mp4, .pdf, .zip, magnet, torrent).
+
+Tabela de arquivos: colunas Nome, Tipo, Tamanho, Progresso, Velocidade, Ações.
+
+Download HTTP: iniciar, pausar, retomar, cancelar com barra de progresso e velocidade em tempo real.
+
+Download Torrent: iniciar torrent/magnet, semear ao concluir, pausar semeadura.
+
+Gerenciamento de pasta: criar pasta DownloadsApp/, botão para abrir.
+
+Autenticação Social: Instagram, Gmail, Facebook via OAuth.
+
+Planilhas no Drive: gerenciar logins e transações (Google Sheets via conta de serviço).
+
+Monetização: ganhar horas (crédito) assistindo ads ou pagar USD 1/mês para remover propagandas.
+
+Controle de créditos: max 24h, ad disparado no início de cada download.
+
+Notificações: pop‑up ou email quando expirado ou download concluído.
+
+Preferências de usuário: limites de velocidade, tema, pasta de destino, banda por sessão.
+
+2.2 Não Funcionais
+Multiplataforma (Windows/macOS/Linux).
+
+Interface responsiva e acessível (atalhos, alto contraste, screen readers).
+
+Segurança: uso de variáveis de ambiente para credenciais, TLS, OAuth refresh automático.
+
+Testabilidade: código modular com cobertura de testes unitários e integração.
+
+Fallback local caso Google Sheets fique indisponível.
+
+3. Arquitetura e Módulos
+Frontend (Tkinter UI):
+
+Janela com barra de URL, drag&drop, tabela com filtros, buscas, painéis de usuário e ads.
+
+Diálogo de login com OAuth.
+
+Tela de preferências/configurações.
+
+Backend:
+
+CrawlerModule: extrai e normaliza URLs.
+
+MetaParser: busca HEAD (HTTP) ou metadados do torrent.
+
+HTTPDownloadManager: threading ou asyncio, com banda limite, retries e checksum.
+
+TorrentDownloadManager: integração libtorrent com semeadura controlada.
+
+AuthManager: fluxo OAuth, interação com Google Sheets via Service Account.
+
+AdManager: lógica de exibição de ads, contagem de tempo, ack ao click de download.
+
+PersistenceManager: local/SQLite fallback, estado dos downloads/usuários.
+
+PreferencesManager: gerenciamento de configurações do usuário.
+
+Planilhas PGD/:
+
+logins: user_id, provider, email, nome, permissões, status, cadastroEm, expiraEm, creditoHora.
+
+financeiro: transacao_id, user_id, tipo (“ads” ou “pagamento”), detalhes, valor, horas, metodo, data.
+
+4. Diagramas
+4.1 Caso de Uso
+mermaid
+usecaseDiagram
+  actor Usuário
+  Usuário --> (Fazer Login Social)
+  Usuário --> (Iniciar Propaganda para Crédito)
+  Usuário --> (Iniciar Download HTTP ou Torrent)
+  Usuário --> (Pausar / Retomar / Cancelar Download ou Semeadura)
+  Usuário --> (Abrir Pasta)
+  Usuário --> (Alterar Preferências)
+4.2 Fluxogramas Principais
+Login / Monetização / Ads
+
+mermaid
+flowchart TD
+  A[App inicia] --> B[Login Social via OAuth]
+  B --> C[Verificar ingressão na planilha]
+  C --> D{Já cadastrado?}
+  D -- Não --> E[Registrar e setar creditoHora = 0]
+  D -- Sim --> F{expiraEm valida ou créditoHora > 0?}
+  F -- Sim --> G[Abrir Dashboard]
+  F -- Não --> H[Abrir Ad de 30s → +2 h cred]
+  H --> G
+Download (HTTP ou Torrent)
+(com verificações de crédito ou assinatura antes de iniciar, e exibição de ad se necessário)
+
+4.3 Sequência (Download HTTP com ads)
+mermaid
+sequenceDiagram
+  participant UI
+  participant AdMgr
+  participant Auth
+  participant HTTPMgr
+  UI->>Auth: solicitaDownload(itemId)
+  Auth->>Auth: verifica assinatura/créditoHora
+  Auth-->>UI: bloqueia ou permite
+  Note right of UI: se necessário
+  UI->>AdMgr: exibe ad
+  AdMgr-->>Auth: +2h creditoHora
+  UI->>HTTPMgr: iniciarDownload(itemId)
+  HTTPMgr->>HTTPMgr: streaming bloco a bloco
+  loop até concluído
+    HTTPMgr->>UI: atualizar progresso/velocidade
+    UI->>HTTPMgr: checa pause/cancel
+  end
+  HTTPMgr-->>UI: download concluído
+5. Diagrama de Dados (Entidades / ERD)
+mermaid
+erDiagram
+  USER ||--o{ TRANSACTION : has
+  USER {
+    string user_id PK
+    string provider
+    string email
+    string nome
+    string status
+    datetime cadastroEm
+    datetime expiraEm
+    int creditoHora
+  }
+  TRANSACTION {
+    string transacao_id PK
+    string user_id FK
+    string tipo
+    string detalhes
+    float valor
+    int horas
+    datetime data
+  }
+  ITEM ||--o{ DOWNLOAD : referencia
+  ITEM {
+    string itemId PK
+    string url
+    string nome
+    string tipo
+    int tamanho
+  }
+  DOWNLOAD {
+    string downloadId PK
+    string itemId FK
+    string user_id FK
+    string status
+    float progresso
+    float velocidade
+    datetime iniciadoEm
+  }
+  TORRENT ||--o{ PIECE : contém
+  TORRENT {
+    string torrentId PK
+    string itemId FK
+    int totalPieces
+  }
+  PIECE {
+    string pieceId PK
+    int index
+    bool baixado
+  }
+6. Diagrama de Classes Simplificado (Backend)
+classDiagram
+  class AuthManager { +login(provider) +verificarUsuario() +obterCreditos() }
+  class AdManager { +exibirAd() +creditarHoras() }
+  class CrawlerModule { +extrairLinks(url) }
+  class MetaParser { +obterMetadados(item) }
+  class HTTPDownloadManager { +iniciar(), +pausar(), +retomar(), +cancelar() }
+  class TorrentDownloadManager { +iniciarTorrent(), +pausarSemeadura(), ... }
+  class PersistenceManager { +salvarEstado(), +carregarEstado() }
+  class PreferencesManager { +carregar(), +salvar() }
+
+  AuthManager --> User
+  AuthManager --> GoogleSheetsAPI
+  AdManager --> AuthManager
+  HTTPDownloadManager --> Item
+  TorrentDownloadManager --> Item
+7. Ergonomia e Usabilidade (Melhorias aplicadas)
+Drag & Drop de URL/Torrent.
+
+Pesquisa e filtros na tabela de downloads.
+
+Agrupamento por status, ícones, cores.
+
+Notificações de sistema (toast pop-ups).
+
+Preferências do usuário (tema claro/escuro, limites de banda, idioma).
+
+Atalhos de teclado e suporte a leitores de tela.
+
+Feedback visual durante ads (“Assista 30 s…”).
+
+8. Monetização e UX de Ads
+Ads disparados apenas quando um download começa de fato.
+
+Timer de 30 segundos bloqueante, com barra visual e mensagem clara “+2h de uso”.
+
+Painel financeiro dentro da UI para visualizar histórico de ad ganhos e pagamentos.
+
+Opção de assinatura automática via Pix ou cartão (botão “Renovar assinatura”).
+
+9. Backend Robustez
+Limitação de banda configurável por sessão e por download.
+
+Retry automático e reconexão.
+
+Checksum verificação pós-downloader.
+
+OAuth refresh automatizado.
+
+Fallback local a planilha Google.
+
+Configurável número máximo de downloads simultâneos.
+
+Segurança: uso de variáveis de ambiente para client secret e tokens.
+
+10. Deployment, Testes e Roadmap
+Deployment: PyInstaller para Windows/Linux/macOS, Homebrew / Snap opcional.
+
+Testes: cobertura unitária (Crawler, Auth, Download managers, Ads), integração com mock de APIs.
+
+Roadmap:
+
+v1.0: crawler + HTTP download
+
+v1.1: torrent + semeadura
+
+v1.2: login social e planilha Google Sheets
+
+v1.3: ads + monetização + painel financeiro
+
+v1.4: interface e usabilidade polida

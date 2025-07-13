@@ -1,8 +1,8 @@
-package Java;
-import java.util.Scanner;
+package java;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.Stack;
 
 // Funções de exemplo
@@ -91,6 +91,7 @@ public class Main {
                 super(nome);
             }
 
+            @Override
             void fazerSom() {
                 System.out.println(nome + " late.");
             }
@@ -101,18 +102,21 @@ public class Main {
                 super(nome);
             }
 
+            @Override
             void fazerSom() {
                 System.out.println(nome + " mia.");
             }
         }
 
         class Carro implements Veiculo {
+            @Override
             public void mover() {
                 System.out.println("O carro está se movendo.");
             }
         }
 
         class Bicicleta implements Veiculo {
+            @Override
             public void mover() {
                 System.out.println("A bicicleta está se movendo.");
             }
@@ -184,7 +188,7 @@ public class Main {
         System.out.println();
     }
 
-    static class TreeNode {
+    public static class TreeNode {
         int data;
         TreeNode left, right;
 
@@ -257,59 +261,33 @@ public class Main {
     }
 
     public static void main (String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            exibirMenu();
-            String escolha = scanner.nextLine();
-
-            if (escolha.equalsIgnoreCase("ESC")) {
-                break;
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
+                exibirMenu();
+                String escolha = scanner.nextLine();
+                
+                if (escolha.equalsIgnoreCase("ESC")) {
+                    break;
+                }
+                
+                switch (escolha) {
+                    case "1" -> exemploVariaveis();
+                    case "2" -> exemploEstruturasControle();
+                    case "3" -> exemploFuncoes();
+                    case "4" -> exemploPOO();
+                    case "5" -> exemploHerancaInterfacePolimorfismo();
+                    case "6" -> exemploVetores();
+                    case "7" -> exemploMatrizes();
+                    case "8" -> exemploListasEncadeadas();
+                    case "9" -> exemploArvoreBinaria();
+                    case "10" -> exemploFilas();
+                    case "11" -> exemploPilhas();
+                    default -> System.out.println("Opção inválida. Tente novamente.");
+                }
+                
+                System.out.println("Pressione Enter para voltar ao menu...");
+                scanner.nextLine();
             }
-
-            switch (escolha) {
-                case "1":
-                    exemploVariaveis();
-                    break;
-                case "2":
-                    exemploEstruturasControle();
-                    break;
-                case "3":
-                    exemploFuncoes();
-                    break;
-                case "4":
-                    exemploPOO();
-                    break;
-                case "5":
-                    exemploHerancaInterfacePolimorfismo();
-                    break;
-                case "6":
-                    exemploVetores();
-                    break;
-                case "7":
-                    exemploMatrizes();
-                    break;
-                case "8":
-                    exemploListasEncadeadas();
-                    break;
-                case "9":
-                    exemploArvoreBinaria();
-                    break;
-                case "10":
-                    exemploFilas();
-                    break;
-                case "11":
-                    exemploPilhas();
-                    break;
-                default:
-                    System.out.println("Opção inválida. Tente novamente.");
-                    break;
-            }
-
-            System.out.println("Pressione Enter para voltar ao menu...");
-            scanner.nextLine();
         }
-
-        scanner.close();
     }
 }
