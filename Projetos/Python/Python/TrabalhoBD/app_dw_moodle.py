@@ -10,9 +10,22 @@ import mysql.connector
 import matplotlib.pyplot as plt
 import numpy as np
 
-# --- CONEXÃO COM O BANCO DE DADOS ---
-db = mysql.connector.connect(host="localhost", user="root", password="", database="educacional")
-cursor = db.cursor()
+from dotenv import load_dotenv
+import os
+
+try:
+    load_dotenv()
+    db = mysql.connector.connect(
+        host = os.getenv("DB_HOST") or "localhost",
+        user = os.getenv("DB_USER") or "root",
+        password = os.getenv("DB_PASSWORD") or "",
+        database = os.getenv("DB_NAME") or "educacional"
+    )
+    cursor = db.cursor()
+except mysql.connector.Error as err:
+    from tkinter import messagebox
+    messagebox.showerror("Erro de conexão", f"Não foi possível conectar ao banco de dados:\n{err}")
+    raise SystemExit
 
 # --- UTILITÁRIOS DE DADOS ---
 def resetar_texto():
